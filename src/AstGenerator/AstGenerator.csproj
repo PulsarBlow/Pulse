@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>pulse</AssemblyName>
-    <RootNamespace>Pulse.Interpreter</RootNamespace>
+    <RootNamespace>Pulse.AstGenerator</RootNamespace>
+    <AssemblyName>pulse_ast</AssemblyName>
   </PropertyGroup>
-  
+
 </Project>

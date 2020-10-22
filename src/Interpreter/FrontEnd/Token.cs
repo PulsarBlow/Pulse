@@ -1,4 +1,4 @@
-namespace Pulse.Interpreter
+namespace Pulse.Interpreter.FrontEnd
 {
     public class Token
     {

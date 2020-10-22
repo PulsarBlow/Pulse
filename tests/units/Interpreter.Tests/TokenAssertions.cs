@@ -1,7 +1,7 @@
 namespace Pulse.Interpreter.Tests
 {
     using System;
-    using Interpreter;
+    using Interpreter.FrontEnd;
     using Xunit;
 
     public static class TokenAssertions

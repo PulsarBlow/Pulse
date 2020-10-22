@@ -1,10 +1,10 @@
-namespace Pulse.Interpreter.Tests
+namespace Pulse.Interpreter.Tests.FrontEnd
 {
     using System;
     using System.Collections.Generic;
-    using Interpreter;
+    using Interpreter.FrontEnd;
     using Xunit;
-    using Lexer = Lexer;
+    using Lexer = Interpreter.FrontEnd.Lexer;
 
     public class LexerTest
     {

@@ -1,4 +1,4 @@
-namespace Pulse.Interpreter
+namespace Pulse.Interpreter.FrontEnd
 {
     using System.Collections.Generic;
     using System.Globalization;
@@ -39,7 +39,7 @@ namespace Pulse.Interpreter
             string source)
             => _source = source;
 
-        public IReadOnlyCollection<Token> ReadTokens()
+        public IEnumerable<Token> ReadTokens()
         {
             while (!IsAtEnd)
             {
