@@ -1,0 +1,17 @@
+<Project>
+
+  <Import Project="dependencies.props"/>
+  <Import Project="version.props"/>
+
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <NoWarn>$(NoWarn)</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType Condition=" '$(Configuration)' != 'Debug' ">portable</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Product>Pulse</Product>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+</Project>
