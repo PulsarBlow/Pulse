@@ -1,7 +1,5 @@
 namespace Pulse.AstGenerator
 {
-    using System.Collections.Generic;
-
     public static class ReservedKeyword
     {
         public static bool IsKeyword(

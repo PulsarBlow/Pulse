@@ -48,9 +48,13 @@
         private static void Run(
             string source)
         {
-            var scanner = new Lexer(source);
-            var tokens = scanner.ReadTokens();
-            foreach (var token in tokens) { Console.WriteLine(token); }
+            var lexer = new Lexer(source);
+            var tokens = lexer.ReadTokens();
+            var parser = new Parser(tokens);
+            var expression = parser.Parse();
+
+            if (_hadError || expression == null) return;
+            Console.WriteLine(new AstPrinter().Print(expression));
         }
 
         internal static void Error(
@@ -60,6 +64,18 @@
             Report(
                 line,
                 string.Empty,
+                message);
+        }
+
+        internal static void Error(
+            Token token,
+            string message)
+        {
+            Report(
+                token.Line,
+                token.Type == TokenType.Eof
+                    ? " at end"
+                    : $" at '{token.Lexeme}'",
                 message);
         }
 

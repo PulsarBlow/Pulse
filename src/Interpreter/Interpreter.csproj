@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="../../props/common.props"/>
-  
+
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
@@ -9,5 +9,5 @@
     <AssemblyName>pulse</AssemblyName>
     <RootNamespace>Pulse.Interpreter</RootNamespace>
   </PropertyGroup>
-  
+
 </Project>

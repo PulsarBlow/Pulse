@@ -16,11 +16,10 @@
 
 ---
 
-> In tribute to my team mates at Payfit who are so incredibly inspiring. Pulse is my first step to follow their track.
+> A tribute to my team mates at Payfit who are so incredibly inspiring. Pulse is my first step to follow their track.
 
 ## About <a name = "about"></a>
 
 Pulse is a dynamically typed programming language. It combines successful concepts from mature languages like Scheme, JavaScript and C#.
 
 Pulse is small, clean and efficient.
-

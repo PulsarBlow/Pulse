@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  
-  <Import Project="../../../props/common.props" />
-  
+
+  <Import Project="../../../props/common.props"/>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
