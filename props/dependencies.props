@@ -4,6 +4,6 @@
     <MoqVersion>4.14.6</MoqVersion>
     <TestSdkVersion>16.7.1</TestSdkVersion>
     <XunitVersion>2.4.1</XunitVersion>
-    <XUnitRunnerVersion>2.4.1</XUnitRunnerVersion>
+    <XUnitRunnerVersion>2.4.3</XUnitRunnerVersion>
   </PropertyGroup>
 </Project>

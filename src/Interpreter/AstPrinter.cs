@@ -1,5 +1,7 @@
 namespace Pulse.Interpreter
 {
+    using System;
+    using System.Globalization;
     using System.Text;
     using FrontEnd;
 
@@ -24,7 +26,10 @@ namespace Pulse.Interpreter
 
         public string VisitLiteralExpression(
             Expression.Literal expression)
-            => expression.Value.ToString() ?? string.Empty;
+            => Convert.ToString(
+                    expression.Value,
+                    CultureInfo.InvariantCulture)
+                ?? string.Empty;
 
         public string VisitUnaryExpression(
             Expression.Unary expression)

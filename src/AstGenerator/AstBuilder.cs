@@ -59,7 +59,7 @@ namespace Pulse.AstGenerator
 
         private void WriteFileHeader()
         {
-            var asm = Assembly.GetEntryAssembly();
+            var asm = Assembly.GetAssembly(typeof(AstBuilder));
             if (asm == null) return;
 
             var generatorName = asm
