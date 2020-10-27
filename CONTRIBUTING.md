@@ -1,6 +1,7 @@
 # Contributing
 
-Contributions are highly welcome!\
+Contributions are highly welcome!
+
 However, except for very small changes, kindly file an issue and let's have a discussion before you open a pull request.
 
 ## Building The Project
@@ -27,4 +28,4 @@ This will result in the following:
 
 -   Restore all NuGet packages required for building
 -   Build a release and run tests against it
--   Compute coverage (into `./.build` temporary directory)
+-   Compute coverage (into `/.build` temporary directory)
