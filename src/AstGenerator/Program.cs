@@ -27,16 +27,15 @@
                 });
 
             const int indentSize= 4;
-            const string baseName = "Expression";
+            const string fileName = "Expression.cs";
 
             var builder = new AstBuilder(
                 "Pulse.Interpreter.FrontEnd",
-                "Expression",
                 indentSize);
 
             var outputFile = Path.Combine(
                 outputDir,
-                $"{baseName}.cs");
+                fileName);
             var writer = new AstWriter(
                 builder,
                 outputFile);

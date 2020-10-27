@@ -52,7 +52,7 @@ namespace Pulse.Interpreter.FrontEnd
             {
                 Token op = Previous();
                 Expression right = Comparison();
-                expression = new Expression.Binary(
+                expression = new BinaryExpression(
                     expression,
                     op,
                     right);
@@ -73,7 +73,7 @@ namespace Pulse.Interpreter.FrontEnd
             {
                 Token op = Previous();
                 Expression right = Term();
-                expression = new Expression.Binary(
+                expression = new BinaryExpression(
                     expression,
                     op,
                     right);
@@ -92,7 +92,7 @@ namespace Pulse.Interpreter.FrontEnd
             {
                 Token op = Previous();
                 Expression right = Factor();
-                expression = new Expression.Binary(
+                expression = new BinaryExpression(
                     expression,
                     op,
                     right);
@@ -111,7 +111,7 @@ namespace Pulse.Interpreter.FrontEnd
             {
                 Token op = Previous();
                 Expression right = Unary();
-                expression = new Expression.Binary(
+                expression = new BinaryExpression(
                     expression,
                     op,
                     right);
@@ -128,22 +128,22 @@ namespace Pulse.Interpreter.FrontEnd
 
             Token op = Previous();
             Expression right = Unary();
-            return new Expression.Unary(
+            return new UnaryExpression(
                 op,
                 right);
         }
 
         private Expression Primary()
         {
-            if (Match(TokenType.False)) return new Expression.Literal(false);
-            if (Match(TokenType.True)) return new Expression.Literal(true);
-            if (Match(TokenType.Nil)) return new Expression.Literal(null);
+            if (Match(TokenType.False)) return new LiteralExpression(false);
+            if (Match(TokenType.True)) return new LiteralExpression(true);
+            if (Match(TokenType.Nil)) return new LiteralExpression(null);
 
             if (Match(
                 TokenType.Number,
                 TokenType.String))
             {
-                return new Expression.Literal(
+                return new LiteralExpression(
                     Previous()
                         .Literal);
             }
@@ -154,7 +154,7 @@ namespace Pulse.Interpreter.FrontEnd
                 Consume(
                     TokenType.RightParen,
                     "Expect ')' after expression.");
-                return new Expression.Grouping(expression);
+                return new GroupingExpression(expression);
             }
 
             throw Error(

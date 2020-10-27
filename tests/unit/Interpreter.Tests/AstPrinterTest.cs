@@ -8,20 +8,20 @@ namespace Pulse.Interpreter.Tests
         [Fact]
         public void Print_Returns_Expected_Result()
         {
-            Expression expression = new Expression.Binary(
-                new Expression.Unary(
+            Expression expression = new BinaryExpression(
+                new UnaryExpression(
                     new Token(
                         TokenType.Minus,
                         Lexemes.Minus.ToString(),
                         null,
                         1),
-                    new Expression.Literal(123)),
+                    new LiteralExpression(123)),
                 new Token(
                     TokenType.Star,
                     Lexemes.Star.ToString(),
                     null,
                     1),
-                new Expression.Grouping(new Expression.Literal(45.67)));
+                new GroupingExpression(new LiteralExpression(45.67)));
 
             var printer = new AstPrinter();
             var result = printer.Print(expression);

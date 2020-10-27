@@ -99,7 +99,7 @@ namespace Pulse.Interpreter.Tests.FrontEnd
                     expression =>
                     {
                         var unary =
-                            Assert.IsType<Expression.Unary>(expression);
+                            Assert.IsType<UnaryExpression>(expression);
                         Assert.Equal(
                             TokenType.Bang,
                             unary.Operator.Type);
@@ -152,9 +152,9 @@ namespace Pulse.Interpreter.Tests.FrontEnd
                     expression =>
                     {
                         var grouping =
-                            Assert.IsType<Expression.Grouping>(expression);
+                            Assert.IsType<GroupingExpression>(expression);
                         var binary =
-                            Assert.IsType<Expression.Binary>(
+                            Assert.IsType<BinaryExpression>(
                                 grouping.Expression);
                         ExpressionAssertions.Literal(
                             1,
@@ -201,7 +201,7 @@ namespace Pulse.Interpreter.Tests.FrontEnd
                     expression =>
                     {
                         var equality =
-                            Assert.IsType<Expression.Binary>(expression);
+                            Assert.IsType<BinaryExpression>(expression);
                         ExpressionAssertions.Literal(
                             1,
                             equality.Left);

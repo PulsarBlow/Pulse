@@ -5,34 +5,34 @@ namespace Pulse.Interpreter
     using System.Text;
     using FrontEnd;
 
-    internal class AstPrinter : Expression.IVisitor<string>
+    internal class AstPrinter : IVisitor<string>
     {
         public string Print(
             Expression expression)
             => expression.Accept(this);
 
         public string VisitBinaryExpression(
-            Expression.Binary expression)
+            BinaryExpression expression)
             => Parenthesize(
                 expression.Operator.Lexeme,
                 expression.Left,
                 expression.Right);
 
         public string VisitGroupingExpression(
-            Expression.Grouping expression)
+            GroupingExpression expression)
             => Parenthesize(
                 "group",
                 expression.Expression);
 
         public string VisitLiteralExpression(
-            Expression.Literal expression)
+            LiteralExpression expression)
             => Convert.ToString(
                     expression.Value,
                     CultureInfo.InvariantCulture)
                 ?? string.Empty;
 
         public string VisitUnaryExpression(
-            Expression.Unary expression)
+            UnaryExpression expression)
             => Parenthesize(
                 expression.Operator.Lexeme,
                 expression.Right);

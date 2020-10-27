@@ -26,7 +26,7 @@ namespace Pulse.Interpreter.Tests
             double value,
             Expression expression)
         {
-            var literal = Assert.IsType<Expression.Literal>(expression);
+            var literal = Assert.IsType<LiteralExpression>(expression);
             Assert.Equal(
                 value,
                 literal.Value);
@@ -36,7 +36,7 @@ namespace Pulse.Interpreter.Tests
             string value,
             Expression expression)
         {
-            var literal = Assert.IsType<Expression.Literal>(expression);
+            var literal = Assert.IsType<LiteralExpression>(expression);
             Assert.Equal(
                 value,
                 literal.Value);
@@ -46,7 +46,7 @@ namespace Pulse.Interpreter.Tests
             bool value,
             Expression expression)
         {
-            var literal = Assert.IsType<Expression.Literal>(expression);
+            var literal = Assert.IsType<LiteralExpression>(expression);
             Assert.Equal(
                 value,
                 literal.Value);

@@ -17,7 +17,6 @@ namespace Pulse.AstGenerator.Tests
             // it is not deterministic.
             var builder = new AstBuilder(
                 "AstGenerator.Tests.Ast",
-                "ExpressionTest",
                 IndentSize);
 
             builder.BuildAst(typeDefinitions)

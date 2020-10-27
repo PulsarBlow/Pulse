@@ -13,8 +13,7 @@ namespace Pulse.AstGenerator.Tests
             const string baseNamespace = "Pulse.AstGenerator.Tests";
             var fileName = Path.GetRandomFileName();
             var builder = new AstBuilder(
-                baseNamespace,
-                "SomeBaseType");
+                baseNamespace);
             var writer = new AstWriter(
                 builder,
                 fileName);
