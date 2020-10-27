@@ -121,7 +121,7 @@ namespace Pulse.Interpreter.Tests
         public static Action<Token> Equal(
             object literal = null,
             int line = 1)
-            => t=> Assert.True(
+            => t => Assert.True(
                 t.Type == TokenType.Equal
                 && t.Lexeme == Lexemes.Equal.ToString()
                 && t.Literal == literal
@@ -193,6 +193,7 @@ namespace Pulse.Interpreter.Tests
                 lexeme.ToString(),
                 line,
                 literal);
+
         public static Action<Token> Token(
             TokenType tokenType,
             string lexeme,
@@ -222,12 +223,13 @@ namespace Pulse.Interpreter.Tests
             double literal,
             int line = 1)
         {
+            const double roundingSafeGuard = 0.001;
             return t => Assert.True(
                 t.Literal != null
                 && t.Type == TokenType.Number
                 && t.Lexeme == lexeme
-                // Rounding safe-gard comparison
-                && Math.Abs((double) t.Literal - literal) < 0.0001
+                // Rounding safe-guard comparison
+                && Math.Abs((double) t.Literal - literal) < roundingSafeGuard
                 && t.Line == line);
         }
 

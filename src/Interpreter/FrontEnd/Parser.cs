@@ -135,9 +135,11 @@ namespace Pulse.Interpreter.FrontEnd
 
         private Expression Primary()
         {
-            if (Match(TokenType.False)) return new LiteralExpression(false);
-            if (Match(TokenType.True)) return new LiteralExpression(true);
-            if (Match(TokenType.Nil)) return new LiteralExpression(null);
+            if (Match(TokenType.False)) { return new LiteralExpression(false); }
+
+            if (Match(TokenType.True)) { return new LiteralExpression(true); }
+
+            if (Match(TokenType.Nil)) { return new LiteralExpression(null); }
 
             if (Match(
                 TokenType.Number,
@@ -198,7 +200,7 @@ namespace Pulse.Interpreter.FrontEnd
         private bool Check(
             TokenType type)
         {
-            if (IsAtEnd()) return false;
+            if (IsAtEnd()) { return false; }
 
             return Peek()
                     .Type
@@ -207,7 +209,7 @@ namespace Pulse.Interpreter.FrontEnd
 
         private void Advance()
         {
-            if (!IsAtEnd()) _current++;
+            if (!IsAtEnd()) { _current++; }
         }
 
         private bool IsAtEnd()

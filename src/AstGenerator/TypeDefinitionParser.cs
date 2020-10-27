@@ -4,7 +4,7 @@ namespace Pulse.AstGenerator
     using System.Collections.Generic;
     using System.Linq;
 
-    public static class TypeDefinitionParser
+    internal static class TypeDefinitionParser
     {
         public static IEnumerable<TypeDefinition> Parse(
             IEnumerable<string> sourceLines)
@@ -17,7 +17,9 @@ namespace Pulse.AstGenerator
             string definitionSource)
         {
             if (string.IsNullOrWhiteSpace(definitionSource))
+            {
                 throw new ArgumentNullException(nameof(definitionSource));
+            }
 
             var lines = definitionSource.Split(
                 Environment.NewLine,
@@ -31,7 +33,9 @@ namespace Pulse.AstGenerator
             string line)
         {
             if (string.IsNullOrWhiteSpace(line))
+            {
                 throw new ArgumentNullException(nameof(line));
+            }
 
             var parts = line.Split(
                 ':',
@@ -39,7 +43,9 @@ namespace Pulse.AstGenerator
             if (parts.Length != 2
                 || string.IsNullOrWhiteSpace(parts[0])
                 || string.IsNullOrWhiteSpace(parts[1]))
+            {
                 throw new FormatException("Line format is not valid");
+            }
 
             var typeName = parts[0]
                 .Trim();
@@ -54,7 +60,9 @@ namespace Pulse.AstGenerator
             string fieldList)
         {
             if (string.IsNullOrWhiteSpace(fieldList))
+            {
                 throw new ArgumentNullException(nameof(fieldList));
+            }
 
             var parts = fieldList
                 .Trim()
@@ -71,14 +79,18 @@ namespace Pulse.AstGenerator
             string fieldDefinition)
         {
             if (string.IsNullOrWhiteSpace(fieldDefinition))
+            {
                 throw new ArgumentNullException(nameof(fieldDefinition));
+            }
 
             var parts = fieldDefinition
                 .Trim()
                 .Split(' ');
             if (parts.Length != 2)
+            {
                 throw new FormatException(
                     "Field definition format is not valid");
+            }
 
             var typeName = parts[0]
                 .Trim();

@@ -29,7 +29,7 @@
                 Encoding.UTF8);
             Run(source);
 
-            if (_hadError) Environment.Exit(65);
+            if (_hadError) { Environment.Exit(65); }
         }
 
         private static void RunPrompt()
@@ -53,7 +53,8 @@
             var parser = new Parser(tokens);
             var expression = parser.Parse();
 
-            if (_hadError || expression == null) return;
+            if (_hadError || expression == null) { return; }
+
             Console.WriteLine(new AstPrinter().Print(expression));
         }
 

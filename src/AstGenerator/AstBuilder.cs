@@ -19,7 +19,9 @@ namespace Pulse.AstGenerator
             int indentSize = DefaultIdentSize)
         {
             if (string.IsNullOrWhiteSpace(baseNamespace))
+            {
                 throw new ArgumentNullException(nameof(baseNamespace));
+            }
 
             _baseNamespace = baseNamespace;
 
@@ -40,11 +42,13 @@ namespace Pulse.AstGenerator
             IEnumerable<TypeDefinition> typeDefinitions)
         {
             if (typeDefinitions == null)
+            {
                 throw new ArgumentNullException(nameof(typeDefinitions));
+            }
 
             // Avoid multiple enumeration
             var definitions = typeDefinitions.ToList();
-            if (definitions.Count == 0) return;
+            if (definitions.Count == 0) { return; }
 
             WriteFileHeader();
             WriteLine($"namespace {_baseNamespace}");
@@ -60,7 +64,7 @@ namespace Pulse.AstGenerator
         private void WriteFileHeader()
         {
             var asm = Assembly.GetAssembly(typeof(AstBuilder));
-            if (asm == null) return;
+            if (asm == null) { return; }
 
             var generatorName = asm
                 .GetName()
@@ -110,7 +114,8 @@ namespace Pulse.AstGenerator
         private void WriteType(
             TypeDefinition type)
         {
-            WriteLine($"internal sealed class {type.TypeName}Expression : Expression");
+            WriteLine(
+                $"internal sealed class {type.TypeName}Expression : Expression");
             OpenBlock();
             WriteProperties(type);
             WriteLine();
@@ -164,7 +169,7 @@ namespace Pulse.AstGenerator
 
         private void Unindent()
         {
-            if (_indentLevel <= 0) return;
+            if (_indentLevel <= 0) { return; }
 
             _indentLevel--;
         }

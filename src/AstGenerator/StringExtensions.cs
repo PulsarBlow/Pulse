@@ -1,11 +1,11 @@
 namespace Pulse.AstGenerator
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         public static string ToUpperCaseFirst(
             this string value)
         {
-            if (string.IsNullOrEmpty(value)) return value;
+            if (string.IsNullOrEmpty(value)) { return value; }
 
             var array = value.ToCharArray();
             array[0] = char.ToUpper(array[0]);
@@ -15,7 +15,7 @@ namespace Pulse.AstGenerator
         public static string ToLowerCaseFirst(
             this string value)
         {
-            if (string.IsNullOrEmpty(value)) return value;
+            if (string.IsNullOrEmpty(value)) { return value; }
 
             var array = value.ToCharArray();
             array[0] = char.ToLower(array[0]);

@@ -19,7 +19,9 @@ namespace Pulse.AstGenerator
                 ?? throw new ArgumentNullException(nameof(builder));
 
             if (string.IsNullOrWhiteSpace(outputPath))
+            {
                 throw new ArgumentNullException(nameof(outputPath));
+            }
 
             _outputPath = outputPath;
         }

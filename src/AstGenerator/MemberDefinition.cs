@@ -1,6 +1,6 @@
 namespace Pulse.AstGenerator
 {
-    public class MemberDefinition
+    internal class MemberDefinition
     {
         public string TypeName { get; }
         public string IdentifierName { get; }

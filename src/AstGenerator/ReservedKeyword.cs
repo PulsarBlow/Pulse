@@ -1,6 +1,6 @@
 namespace Pulse.AstGenerator
 {
-    public static class ReservedKeyword
+    internal static class ReservedKeyword
     {
         public static bool IsKeyword(
             string value)

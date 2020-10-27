@@ -3,7 +3,7 @@ namespace Pulse.AstGenerator
     using System.Collections.Generic;
     using System.Linq;
 
-    public class TypeDefinition
+    internal class TypeDefinition
     {
         private readonly List<MemberDefinition> _members = new List<MemberDefinition>();
 

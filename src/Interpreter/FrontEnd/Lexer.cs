@@ -176,7 +176,8 @@ namespace Pulse.Interpreter.FrontEnd
             {
                 // Pulse supports multi-line strings.
                 // That does mean we also need to update line when we hit a newline inside a string.
-                if (Peek() == Lexemes.NewLine) _line++;
+                if (Peek() == Lexemes.NewLine) { _line++; }
+
                 Advance();
             }
 
@@ -204,14 +205,14 @@ namespace Pulse.Interpreter.FrontEnd
 
         private void ReadNumber()
         {
-            while (IsDigit(Peek())) Advance();
+            while (IsDigit(Peek())) { Advance(); }
 
             // Look for a fractional part.
             if (Peek() == Lexemes.Dot && IsDigit(PeekNext()))
             {
                 // Consume the ".".
                 Advance();
-                while (IsDigit(Peek())) Advance();
+                while (IsDigit(Peek())) { Advance(); }
             }
 
             AddToken(
@@ -225,7 +226,7 @@ namespace Pulse.Interpreter.FrontEnd
 
         private void ReadIdentifier()
         {
-            while (IsAlphaNumeric(Peek())) Advance();
+            while (IsAlphaNumeric(Peek())) { Advance(); }
 
             var text = _source.Substring(
                 _start,
@@ -251,8 +252,9 @@ namespace Pulse.Interpreter.FrontEnd
         private bool Match(
             char expected)
         {
-            if (IsAtEnd) return false;
-            if (_source[_current] != expected) return false;
+            if (IsAtEnd) { return false; }
+
+            if (_source[_current] != expected) { return false; }
 
             // It’s like a conditional advance()
             // We only consume the current character if it’s what we’re
