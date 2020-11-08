@@ -1,7 +1,8 @@
-namespace Pulse.Interpreter.FrontEnd
+namespace Pulse.CodeAnalysis.FrontEnd
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Errors;
 
     /// <summary>
     /// Recursive descent parser
@@ -15,26 +16,33 @@ namespace Pulse.Interpreter.FrontEnd
     // unary          → ( "!" | "-" ) unary | primary;
     // primary        → NUMBER | STRING | "true" | "false" | "nil"
     //                | "(" expression ")";
-    internal class Parser
+    public class Parser
     {
+        private readonly IErrorReporter _errorReporter;
         private readonly List<Token> _tokens = new List<Token>();
         private int _current;
 
         public Parser(
+            IErrorReporter errorReporter,
             IEnumerable<Token> tokens)
         {
+            _errorReporter = errorReporter;
             _tokens.AddRange(tokens);
         }
 
+        /// <summary>
+        /// Parse the <see cref="Token"/> collection used
+        /// to instantiates the Parser into an AST
+        /// </summary>
+        /// <returns>The parsed Expression (AST)</returns>
+        /// <exception cref="ParseException">If the parsing fails</exception>
         public Expression? Parse()
         {
             try { return Expression(); }
-            catch (ParseException)
+            catch (ParseException ex)
             {
-                // That's OK.
-                // We don't want the parser to crash on invalid syntax.
-                // It will handle error in panic mode.
-                // https://compilers.iecc.com/comparch/article/03-04-035
+                // We don't want the parser to crash on error
+                _errorReporter.ReportSyntaxError(ex);
                 return null;
             }
         }
@@ -159,7 +167,7 @@ namespace Pulse.Interpreter.FrontEnd
                 return new GroupingExpression(expression);
             }
 
-            throw Error(
+            throw new ParseException(
                 Peek(),
                 "Expect expression.");
         }
@@ -170,22 +178,12 @@ namespace Pulse.Interpreter.FrontEnd
         {
             if (!Check(tokenType))
             {
-                throw Error(
+                throw new ParseException(
                     Peek(),
                     message);
             }
 
             Advance();
-        }
-
-        private static ParseException Error(
-            Token token,
-            string message)
-        {
-            Program.Error(
-                token,
-                message);
-            return new ParseException(message);
         }
 
         private bool Match(

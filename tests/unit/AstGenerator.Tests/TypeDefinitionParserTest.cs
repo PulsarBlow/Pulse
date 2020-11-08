@@ -3,7 +3,6 @@ namespace Pulse.AstGenerator.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using AstGenerator;
     using Xunit;
 
     public class TypeDefinitionParserTest

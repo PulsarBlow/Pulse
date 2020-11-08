@@ -1,7 +1,7 @@
-namespace Pulse.Interpreter.Tests
+namespace Pulse.CodeAnalysis.Tests
 {
+    using CodeAnalysis.FrontEnd;
     using Xunit;
-    using Interpreter.FrontEnd;
 
     public class AstPrinterTest
     {

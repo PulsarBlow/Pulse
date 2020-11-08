@@ -8,20 +8,20 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace Pulse.Interpreter.FrontEnd
+namespace Pulse.CodeAnalysis.FrontEnd
 {
-    internal interface IVisitor<out T>
+    public interface IVisitor<out T>
     {
         T VisitBinaryExpression(BinaryExpression expression);
         T VisitGroupingExpression(GroupingExpression expression);
         T VisitLiteralExpression(LiteralExpression expression);
         T VisitUnaryExpression(UnaryExpression expression);
     }
-    internal abstract class Expression
+    public abstract class Expression
     {
         public abstract T Accept<T>(IVisitor<T> visitor);
     }
-    internal sealed class BinaryExpression : Expression
+    public sealed class BinaryExpression : Expression
     {
         public Expression Left { get; }
         public Token Operator { get; }
@@ -37,7 +37,7 @@ namespace Pulse.Interpreter.FrontEnd
         public override T Accept<T>(IVisitor<T> visitor)
             => visitor.VisitBinaryExpression(this);
     }
-    internal sealed class GroupingExpression : Expression
+    public sealed class GroupingExpression : Expression
     {
         public Expression Expression { get; }
         
@@ -49,7 +49,7 @@ namespace Pulse.Interpreter.FrontEnd
         public override T Accept<T>(IVisitor<T> visitor)
             => visitor.VisitGroupingExpression(this);
     }
-    internal sealed class LiteralExpression : Expression
+    public sealed class LiteralExpression : Expression
     {
         public object Value { get; }
         
@@ -61,7 +61,7 @@ namespace Pulse.Interpreter.FrontEnd
         public override T Accept<T>(IVisitor<T> visitor)
             => visitor.VisitLiteralExpression(this);
     }
-    internal sealed class UnaryExpression : Expression
+    public sealed class UnaryExpression : Expression
     {
         public Token Operator { get; }
         public Expression Right { get; }

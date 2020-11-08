@@ -11,7 +11,7 @@
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("Usage: generate_ast <output directory>");
+                Console.WriteLine("Usage: pulse_ast <output directory>");
                 Environment.Exit(64);
             }
 
@@ -26,11 +26,11 @@
                     "Unary    : Token operator, Expression right",
                 });
 
-            const int indentSize= 4;
+            const int indentSize = 4;
             const string fileName = "Expression.cs";
 
             var builder = new AstBuilder(
-                "Pulse.Interpreter.FrontEnd",
+                "Pulse.CodeAnalysis.FrontEnd",
                 indentSize);
 
             var outputFile = Path.Combine(

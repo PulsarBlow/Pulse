@@ -1,7 +1,6 @@
 namespace Pulse.AstGenerator.Tests
 {
     using System.Collections.Generic;
-    using AstGenerator;
     using Snapper;
     using Xunit;
 

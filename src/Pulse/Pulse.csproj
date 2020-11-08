@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../props/common.props" />
+
+    <PropertyGroup>
+      <Nullable>enable</Nullable>
+      <OutputType>Exe</OutputType>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+      <AssemblyName>pulse</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Pulse.CodeAnalysis\Pulse.CodeAnalysis.csproj" />
+    </ItemGroup>
+
+</Project>

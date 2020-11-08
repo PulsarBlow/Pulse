@@ -1,10 +1,11 @@
-namespace Pulse.Interpreter.Tests.FrontEnd
+namespace Pulse.CodeAnalysis.Tests.FrontEnd
 {
     using System;
     using System.Collections.Generic;
-    using Interpreter.FrontEnd;
+    using CodeAnalysis.FrontEnd;
+    using CodeAnalysis.FrontEnd.Errors;
+    using Moq;
     using Xunit;
-    using Lexer = Interpreter.FrontEnd.Lexer;
 
     public class LexerTest
     {
@@ -14,11 +15,54 @@ namespace Pulse.Interpreter.Tests.FrontEnd
             string source,
             Action<Token>[] inspectors)
         {
-            var lexer = new Lexer(source);
+            var lexer = new Lexer(
+                source,
+                Mock.Of<IErrorReporter>());
             var tokens = lexer.ReadTokens();
             Assert.Collection(
                 tokens,
                 inspectors);
+        }
+
+        [Theory]
+        [InlineData("%")]
+        [InlineData("^")]
+        [InlineData("£")]
+        public void ReadToken_Reports_Error_When_Unexpected_Character(
+            string source)
+        {
+            var errorReporter = new Mock<IErrorReporter>();
+            var lexer = new Lexer(
+                source,
+                errorReporter.Object);
+            lexer.ReadTokens();
+
+            errorReporter.Verify(
+                x => x.ReportSyntaxError(
+                    It.Is<int>(i => i == 1),
+                    It.Is<string>(
+                        s => s.Contains(
+                            "unexpected",
+                            StringComparison.OrdinalIgnoreCase))));
+        }
+
+        [Fact]
+        public void ReadToken_Reports_Error_When_Unterminated_String()
+        {
+            var errorReporter = new Mock<IErrorReporter>();
+            var lexer = new Lexer(
+                "\"word",
+                errorReporter.Object);
+            lexer.ReadTokens();
+
+            errorReporter.Verify(
+                x => x.ReportSyntaxError(
+                    It.Is<int>(i => i == 1),
+                    It.Is<string>(
+                        s => s.Contains(
+                            "unterminated",
+                            StringComparison.OrdinalIgnoreCase))),
+                Times.Once());
         }
 
         public static IEnumerable<object[]> ReadToken_TestCases()

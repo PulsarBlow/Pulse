@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
 [assembly:
-    InternalsVisibleTo("Interpreter.Tests")]
+    InternalsVisibleTo("Pulse.CodeAnalysis.Tests")]
 [assembly:
     InternalsVisibleTo("DynamicProxyGenAssembly2")]

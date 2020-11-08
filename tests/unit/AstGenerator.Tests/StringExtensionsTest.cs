@@ -1,6 +1,5 @@
 namespace Pulse.AstGenerator.Tests
 {
-    using AstGenerator;
     using Xunit;
 
     public class StringExtensionsTest

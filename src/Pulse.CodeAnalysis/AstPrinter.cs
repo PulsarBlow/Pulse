@@ -1,4 +1,4 @@
-namespace Pulse.Interpreter
+namespace Pulse.CodeAnalysis
 {
     using System;
     using System.Globalization;

@@ -1,26 +1,28 @@
-namespace Pulse.Interpreter.Tests
+namespace Pulse.CodeAnalysis.Tests
 {
     using System;
-    using Interpreter.FrontEnd;
+    using CodeAnalysis.FrontEnd;
     using Xunit;
 
     internal static class ExpressionAssertions
     {
         public static Action<Expression> NumberInspector(
             double value)
-        {
-            return expression => Literal(
+            => expression => Literal(
                 value,
                 expression);
-        }
 
         public static Action<Expression> StringInspector(
             string value)
-        {
-            return expression => Literal(
+            => expression => Literal(
                 value,
                 expression);
-        }
+
+        public static Action<Expression> BooleanInspector(
+            bool value)
+            => expression => Literal(
+                value,
+                expression);
 
         public static void Literal(
             double value,

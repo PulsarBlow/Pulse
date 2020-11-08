@@ -91,7 +91,7 @@ namespace Pulse.AstGenerator
         private void WriteVisitor(
             IEnumerable<TypeDefinition> types)
         {
-            WriteLine("internal interface IVisitor<out T>");
+            WriteLine("public interface IVisitor<out T>");
             OpenBlock();
             foreach (var definition in types)
             {
@@ -104,7 +104,7 @@ namespace Pulse.AstGenerator
 
         private void WriteBaseType()
         {
-            WriteLine($"internal abstract class Expression");
+            WriteLine($"public abstract class Expression");
             OpenBlock();
 
             WriteLine("public abstract T Accept<T>(IVisitor<T> visitor);");
@@ -115,7 +115,7 @@ namespace Pulse.AstGenerator
             TypeDefinition type)
         {
             WriteLine(
-                $"internal sealed class {type.TypeName}Expression : Expression");
+                $"public sealed class {type.TypeName}Expression : Expression");
             OpenBlock();
             WriteProperties(type);
             WriteLine();
@@ -195,7 +195,7 @@ namespace Pulse.AstGenerator
         private static string FormatParameterName(
             string name)
         {
-            if (string.IsNullOrWhiteSpace(name)) return name;
+            if (string.IsNullOrWhiteSpace(name)) { return name; }
 
             var result = name.ToLowerCaseFirst();
             return ReservedKeyword.IsKeyword(name)

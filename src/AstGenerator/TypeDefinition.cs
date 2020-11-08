@@ -5,7 +5,8 @@ namespace Pulse.AstGenerator
 
     internal class TypeDefinition
     {
-        private readonly List<MemberDefinition> _members = new List<MemberDefinition>();
+        private readonly List<MemberDefinition> _members =
+            new List<MemberDefinition>();
 
         public string TypeName { get; }
 

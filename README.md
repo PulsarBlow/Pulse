@@ -25,3 +25,7 @@
 Pulse is a dynamically typed programming language. It combines successful concepts from mature languages like Scheme, JavaScript and C#.
 
 Pulse aims to be small, clean and efficient.
+
+## Attributions
+
+Pulse implementation is largely inspired from the fabulous [Crafting Interpreter](http://craftinginterpreters.com/) book.

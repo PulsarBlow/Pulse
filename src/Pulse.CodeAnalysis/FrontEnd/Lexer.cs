@@ -1,8 +1,9 @@
-namespace Pulse.Interpreter.FrontEnd
+namespace Pulse.CodeAnalysis.FrontEnd
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using Errors;
 
     public class Lexer
     {
@@ -10,6 +11,7 @@ namespace Pulse.Interpreter.FrontEnd
         private int _current;
         private int _line = 1;
         private readonly string _source;
+        private readonly IErrorReporter _errorReporter;
         private readonly List<Token> _tokens = new List<Token>();
         private readonly Dictionary<string, TokenType> _keywords =
             new Dictionary<string, TokenType>
@@ -36,8 +38,12 @@ namespace Pulse.Interpreter.FrontEnd
             => _current >= _source.Length;
 
         public Lexer(
-            string source)
-            => _source = source;
+            string source,
+            IErrorReporter errorReporter)
+        {
+            _errorReporter = errorReporter;
+            _source = source;
+        }
 
         public IEnumerable<Token> ReadTokens()
         {
@@ -122,7 +128,10 @@ namespace Pulse.Interpreter.FrontEnd
                     if (Match(Lexemes.Slash))
                     {
                         // A comment goes until the end of the line.
-                        while (Peek() != Lexemes.NewLine && !IsAtEnd) Advance();
+                        while (Peek() != Lexemes.NewLine && !IsAtEnd)
+                        {
+                            Advance();
+                        }
                     }
                     else { AddToken(TokenType.Slash); }
 
@@ -146,7 +155,7 @@ namespace Pulse.Interpreter.FrontEnd
                     else if (IsAlpha(c)) { ReadIdentifier(); }
                     else
                     {
-                        Program.Error(
+                        _errorReporter.ReportSyntaxError(
                             _line,
                             "Unexpected character.");
                     }
@@ -183,7 +192,7 @@ namespace Pulse.Interpreter.FrontEnd
 
             if (IsAtEnd)
             {
-                Program.Error(
+                _errorReporter.ReportSyntaxError(
                     _line,
                     "Unterminated string.");
                 return;
@@ -279,7 +288,7 @@ namespace Pulse.Interpreter.FrontEnd
 
         private static bool IsAlpha(
             char c)
-            => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+            => c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_';
 
         private static bool IsAlphaNumeric(
             char c)

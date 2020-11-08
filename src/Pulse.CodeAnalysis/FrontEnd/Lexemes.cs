@@ -1,4 +1,4 @@
-namespace Pulse.Interpreter.FrontEnd
+namespace Pulse.CodeAnalysis.FrontEnd
 {
     internal static class Lexemes
     {

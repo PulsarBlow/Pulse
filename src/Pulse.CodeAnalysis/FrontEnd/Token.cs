@@ -1,4 +1,4 @@
-namespace Pulse.Interpreter.FrontEnd
+namespace Pulse.CodeAnalysis.FrontEnd
 {
     public class Token
     {
@@ -9,6 +9,19 @@ namespace Pulse.Interpreter.FrontEnd
         public object? Literal { get; }
 
         public int Line { get; }
+
+        public Token(
+            TokenType tokenType,
+            char lexeme,
+            object? literal,
+            int line)
+            : this(
+                tokenType,
+                lexeme.ToString(),
+                literal,
+                line)
+        {
+        }
 
         public Token(
             TokenType tokenType,
