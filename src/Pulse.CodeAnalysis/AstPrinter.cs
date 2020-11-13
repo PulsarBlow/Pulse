@@ -5,7 +5,7 @@ namespace Pulse.CodeAnalysis
     using System.Text;
     using FrontEnd;
 
-    internal class AstPrinter : IVisitor<string>
+    internal class AstPrinter : IExpressionVisitor<string>
     {
         public string Print(
             Expression expression)

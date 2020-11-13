@@ -1,17 +1,47 @@
 namespace Pulse.CodeAnalysis
 {
     using System;
+    using System.Collections.Generic;
     using FrontEnd;
     using FrontEnd.Errors;
     using Helpers;
 
-    public class Interpreter : IVisitor<object?>
+    public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor
     {
         private readonly IErrorReporter _errorReporter;
 
         public Interpreter(
             IErrorReporter errorReporter)
             => _errorReporter = errorReporter;
+
+        /// <summary>
+        /// Interpret a given Statements and Expression
+        /// </summary>
+        /// <param name="statements">A collection of <see cref="Statement"/> to interpret</param>
+        public void Interpret(
+            IEnumerable<Statement> statements)
+        {
+            try
+            {
+                foreach (var stmt in statements) { Execute(stmt); }
+            }
+            catch (RuntimeException e)
+            {
+                // We don't want the Interpreter to crash on runtime error.
+                _errorReporter.ReportRuntimeError(e);
+            }
+        }
+
+        public void VisitExpressionStatement(
+            ExpressionStatement statement)
+            => Evaluate(statement.Expression);
+
+        public void VisitPrintStatement(
+            PrintStatement statement)
+        {
+            var value = Evaluate(statement.Expression);
+            Console.WriteLine(ObjectFormatter.Stringify(value));
+        }
 
         public object? VisitBinaryExpression(
             BinaryExpression expression)
@@ -124,23 +154,10 @@ namespace Pulse.CodeAnalysis
             return null;
         }
 
-        /// <summary>
-        /// Interpret a given Expression and returns
-        /// </summary>
-        /// <param name="expression">The expression to interpret</param>
-        public void Interpret(
-            Expression expression)
+        private void Execute(
+            Statement statement)
         {
-            try
-            {
-                var value = Evaluate(expression);
-                Console.WriteLine(ObjectFormatter.Stringify(value));
-            }
-            catch (RuntimeException e)
-            {
-                // We don't want the Interpreter to crash on runtime error.
-                _errorReporter.ReportRuntimeError(e);
-            }
+            statement.Accept(this);
         }
 
         private object? Evaluate(

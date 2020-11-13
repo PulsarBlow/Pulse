@@ -35,9 +35,15 @@
                 source,
                 errorReporter);
 
-            if (errorReporter.HadSyntaxError) { Environment.Exit(ExitCode.ExDataErr); }
+            if (errorReporter.HadSyntaxError)
+            {
+                Environment.Exit(ExitCode.ExDataErr);
+            }
 
-            if (errorReporter.HadRuntimeError) { Environment.Exit(ExitCode.ExSoftware); }
+            if (errorReporter.HadRuntimeError)
+            {
+                Environment.Exit(ExitCode.ExSoftware);
+            }
         }
 
         private static void RunPrompt()
@@ -68,11 +74,11 @@
             var parser = new Parser(
                 errorReporter,
                 tokens);
-            var expression = parser.Parse();
+            var statements = parser.Parse();
 
-            if (errorReporter.HadSyntaxError || expression == null) { return; }
+            if (errorReporter.HadSyntaxError || statements == null) { return; }
 
-            new Interpreter(errorReporter).Interpret(expression);
+            new Interpreter(errorReporter).Interpret(statements);
         }
     }
 }

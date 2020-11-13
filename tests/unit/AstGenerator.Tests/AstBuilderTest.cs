@@ -16,54 +16,57 @@ namespace Pulse.AstGenerator.Tests
             // it is not deterministic.
             var builder = new AstBuilder(
                 "AstGenerator.Tests.Ast",
+                "ExpressionTest",
                 IndentSize);
 
-            builder.BuildAst(typeDefinitions)
+            builder.BuildAst(
+                    AstKind.Expressions,
+                    typeDefinitions)
                 .ShouldMatchSnapshot();
         }
 
-        private static IEnumerable<TypeDefinition> CreateTypeDefinitions()
+        private static IEnumerable<TypeDescriptor> CreateTypeDefinitions()
         {
             return new[]
             {
-                new TypeDefinition(
+                new TypeDescriptor(
                     "Binary",
                     new[]
                     {
-                        new MemberDefinition(
+                        new MemberDescriptor(
                             "Expression",
                             "left"),
-                        new MemberDefinition(
+                        new MemberDescriptor(
                             "Token",
                             "operator"),
-                        new MemberDefinition(
+                        new MemberDescriptor(
                             "Expression",
                             "right"),
                     }),
-                new TypeDefinition(
+                new TypeDescriptor(
                     "Grouping",
                     new[]
                     {
-                        new MemberDefinition(
+                        new MemberDescriptor(
                             "Expression",
                             "expression"),
                     }),
-                new TypeDefinition(
+                new TypeDescriptor(
                     "Literal",
                     new[]
                     {
-                        new MemberDefinition(
+                        new MemberDescriptor(
                             "object",
                             "value"),
                     }),
-                new TypeDefinition(
+                new TypeDescriptor(
                     "Unary",
                     new[]
                     {
-                        new MemberDefinition(
+                        new MemberDescriptor(
                             "Token",
                             "operator"),
-                        new MemberDefinition(
+                        new MemberDescriptor(
                             "Expression",
                             "right"),
                     }),

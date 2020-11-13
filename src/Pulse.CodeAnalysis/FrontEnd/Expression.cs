@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------
 namespace Pulse.CodeAnalysis.FrontEnd
 {
-    public interface IVisitor<out T>
+    public interface IExpressionVisitor<out T>
     {
         T VisitBinaryExpression(BinaryExpression expression);
         T VisitGroupingExpression(GroupingExpression expression);
@@ -19,7 +19,7 @@ namespace Pulse.CodeAnalysis.FrontEnd
     }
     public abstract class Expression
     {
-        public abstract T Accept<T>(IVisitor<T> visitor);
+        public abstract T Accept<T>(IExpressionVisitor<T> visitor);
     }
     public sealed class BinaryExpression : Expression
     {
@@ -34,7 +34,7 @@ namespace Pulse.CodeAnalysis.FrontEnd
             Right = right;
         }
         
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
             => visitor.VisitBinaryExpression(this);
     }
     public sealed class GroupingExpression : Expression
@@ -46,7 +46,7 @@ namespace Pulse.CodeAnalysis.FrontEnd
             Expression = expression;
         }
         
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
             => visitor.VisitGroupingExpression(this);
     }
     public sealed class LiteralExpression : Expression
@@ -58,7 +58,7 @@ namespace Pulse.CodeAnalysis.FrontEnd
             Value = value;
         }
         
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
             => visitor.VisitLiteralExpression(this);
     }
     public sealed class UnaryExpression : Expression
@@ -72,7 +72,7 @@ namespace Pulse.CodeAnalysis.FrontEnd
             Right = right;
         }
         
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
             => visitor.VisitUnaryExpression(this);
     }
 }

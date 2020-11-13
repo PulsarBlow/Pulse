@@ -26,6 +26,32 @@ Pulse is a dynamically typed programming language. It combines successful concep
 
 Pulse aims to be small, clean and efficient.
 
+It is not feature complete, it is not intended for production, and it does have bugs.
+
+### Grammar
+
+```text
+program        → statement* EOF ;
+
+statement      → exprStmt
+               | printStmt ;
+
+exprStmt       → expression ";" ;
+printStmt      → "print" expression ";" ;
+
+expression     → literal
+               | unary
+               | binary
+               | grouping ;
+
+literal        → NUMBER | STRING | "true" | "false" | "nil" ;
+grouping       → "(" expression ")" ;
+unary          → ( "-" | "!" ) expression ;
+binary         → expression operator expression ;
+operator       → "==" | "!=" | "<" | "<=" | ">" | ">="
+               | "+"  | "-"  | "*" | "/" ;
+```
+
 ## Attributions
 
-Pulse implementation is largely inspired from the fabulous [Crafting Interpreter](http://craftinginterpreters.com/) book.
+Pulse implementation is largely inspired by the fabulous [Crafting Interpreter](http://craftinginterpreters.com/) book from [Robert Nystrom](https://github.com/munificent).

@@ -11,13 +11,18 @@ namespace Pulse.AstGenerator.Tests
         public async Task WriteAstAsync()
         {
             const string baseNamespace = "Pulse.AstGenerator.Tests";
+            const string baseTypeName = "ExpressionTest";
             var fileName = Path.GetRandomFileName();
-            var builder = new AstBuilder(baseNamespace);
+            var builder = new AstBuilder(
+                baseNamespace,
+                baseTypeName);
             var writer = new AstWriter(
                 builder,
                 fileName);
 
-            await writer.WriteAstAsync(CreateTypeDefinitions());
+            await writer.WriteAstAsync(
+                AstKind.Expressions,
+                CreateTypeDefinitions());
 
             var content = await File.ReadAllTextAsync(fileName);
             Assert.Contains(
@@ -25,15 +30,15 @@ namespace Pulse.AstGenerator.Tests
                 content);
         }
 
-        private static IEnumerable<TypeDefinition> CreateTypeDefinitions()
+        private static IEnumerable<TypeDescriptor> CreateTypeDefinitions()
         {
             return new[]
             {
-                new TypeDefinition(
+                new TypeDescriptor(
                     "SomeType",
                     new[]
                     {
-                        new MemberDefinition(
+                        new MemberDescriptor(
                             "SomeMemberType",
                             "operator"),
                     }),

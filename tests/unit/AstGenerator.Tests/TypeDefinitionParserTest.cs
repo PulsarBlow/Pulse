@@ -33,15 +33,15 @@ namespace Pulse.AstGenerator.Tests
             var ex = Assert.Throws<FormatException>(
                 () => TypeDefinitionParser.Parse(source));
             Assert.Contains(
-                ex.Message,
-                "Line format is not valid");
+                "Type definition format is not valid [line=Binary:]",
+                ex.Message);
         }
 
         [Theory]
         [MemberData(nameof(Parse_Expected_Test_Cases))]
         internal void Parse_Returns_Expected_Definitions(
             string source,
-            IEnumerable<TypeDefinition> expected)
+            IEnumerable<TypeDescriptor> expected)
         {
             var result = TypeDefinitionParser.Parse(source);
 
@@ -61,17 +61,17 @@ namespace Pulse.AstGenerator.Tests
                 "Binary    : Expression left, Token operator, Expression right",
                 new[]
                 {
-                    new TypeDefinition(
+                    new TypeDescriptor(
                         "Binary",
                         new[]
                         {
-                            new MemberDefinition(
+                            new MemberDescriptor(
                                 "Expression",
                                 "left"),
-                            new MemberDefinition(
+                            new MemberDescriptor(
                                 "Token",
                                 "operator"),
-                            new MemberDefinition(
+                            new MemberDescriptor(
                                 "Expression",
                                 "right"),
                         }),
@@ -83,30 +83,30 @@ namespace Pulse.AstGenerator.Tests
                 "Grouping    : Expression expression\nLiteral    : object value\nUnary    : Token operator, Expression right",
                 new[]
                 {
-                    new TypeDefinition(
+                    new TypeDescriptor(
                         "Grouping",
                         new[]
                         {
-                            new MemberDefinition(
+                            new MemberDescriptor(
                                 "Expression",
                                 "expression"),
                         }),
-                    new TypeDefinition(
+                    new TypeDescriptor(
                         "Literal",
                         new[]
                         {
-                            new MemberDefinition(
+                            new MemberDescriptor(
                                 "object",
                                 "value"),
                         }),
-                    new TypeDefinition(
+                    new TypeDescriptor(
                         "Unary",
                         new[]
                         {
-                            new MemberDefinition(
+                            new MemberDescriptor(
                                 "Token",
                                 "operator"),
-                            new MemberDefinition(
+                            new MemberDescriptor(
                                 "Expression",
                                 "right"),
                         }),
@@ -114,8 +114,8 @@ namespace Pulse.AstGenerator.Tests
             };
         }
 
-        private static Action<TypeDefinition> TypeDefinitionInspector(
-            TypeDefinition expected)
+        private static Action<TypeDescriptor> TypeDefinitionInspector(
+            TypeDescriptor expected)
         {
             return x =>
             {
@@ -130,8 +130,8 @@ namespace Pulse.AstGenerator.Tests
             };
         }
 
-        private static Action<MemberDefinition> FieldDefinitionInspector(
-            MemberDefinition expected)
+        private static Action<MemberDescriptor> FieldDefinitionInspector(
+            MemberDescriptor expected)
         {
             return x =>
             {

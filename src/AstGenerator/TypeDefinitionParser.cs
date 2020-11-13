@@ -4,16 +4,25 @@ namespace Pulse.AstGenerator
     using System.Collections.Generic;
     using System.Linq;
 
+    // A type definition is a string source which defines how types
+    // should be parsed and converted into (Type|Member)Descriptor.
+    // The definition grammar is the following
+    // Definition       → TypeDefinition* EOF
+    // TypeDefinition   → TypeName : MemberDefinition ("," MemberDefinition)* EOL
+    // MemberDefinition → MemberType : MemberName
+    // TypeName         → NUMBER | STRING
+    // MemberType       → NUMBER | STRING
+    // MemberName       → NUMBER | STRING
     internal static class TypeDefinitionParser
     {
-        public static IEnumerable<TypeDefinition> Parse(
+        public static IEnumerable<TypeDescriptor> Parse(
             IEnumerable<string> sourceLines)
             => Parse(
                 string.Join(
                     Environment.NewLine,
                     sourceLines));
 
-        public static IEnumerable<TypeDefinition> Parse(
+        public static IEnumerable<TypeDescriptor> Parse(
             string definitionSource)
         {
             if (string.IsNullOrWhiteSpace(definitionSource))
@@ -25,11 +34,11 @@ namespace Pulse.AstGenerator
                 Environment.NewLine,
                 StringSplitOptions.RemoveEmptyEntries);
 
-            return lines.Select(ParseLine)
+            return lines.Select(ParseType)
                 .ToList();
         }
 
-        private static TypeDefinition ParseLine(
+        private static TypeDescriptor ParseType(
             string line)
         {
             if (string.IsNullOrWhiteSpace(line))
@@ -44,52 +53,52 @@ namespace Pulse.AstGenerator
                 || string.IsNullOrWhiteSpace(parts[0])
                 || string.IsNullOrWhiteSpace(parts[1]))
             {
-                throw new FormatException("Line format is not valid");
+                throw new FormatException(
+                    $"Type definition format is not valid [line={line}]");
             }
 
             var typeName = parts[0]
                 .Trim();
-            var fieldDefinitions = ParseFieldList(parts[1]);
-
-            return new TypeDefinition(
+            var members = ParseMembers(parts[1]);
+            return new TypeDescriptor(
                 typeName,
-                fieldDefinitions);
+                members);
         }
 
-        private static IEnumerable<MemberDefinition> ParseFieldList(
-            string fieldList)
+        private static IEnumerable<MemberDescriptor> ParseMembers(
+            string def)
         {
-            if (string.IsNullOrWhiteSpace(fieldList))
+            if (string.IsNullOrWhiteSpace(def))
             {
-                throw new ArgumentNullException(nameof(fieldList));
+                throw new ArgumentNullException(nameof(def));
             }
 
-            var parts = fieldList
+            var parts = def
                 .Trim()
                 .Split(
                     ',',
                     StringSplitOptions.RemoveEmptyEntries);
 
             return parts
-                .Select(ParseFieldDefinition)
+                .Select(ParseMember)
                 .ToList();
         }
 
-        private static MemberDefinition ParseFieldDefinition(
-            string fieldDefinition)
+        private static MemberDescriptor ParseMember(
+            string def)
         {
-            if (string.IsNullOrWhiteSpace(fieldDefinition))
+            if (string.IsNullOrWhiteSpace(def))
             {
-                throw new ArgumentNullException(nameof(fieldDefinition));
+                throw new ArgumentNullException(nameof(def));
             }
 
-            var parts = fieldDefinition
+            var parts = def
                 .Trim()
                 .Split(' ');
             if (parts.Length != 2)
             {
                 throw new FormatException(
-                    "Field definition format is not valid");
+                    $"Member definition format is not valid [def={def}]");
             }
 
             var typeName = parts[0]
@@ -97,7 +106,7 @@ namespace Pulse.AstGenerator
             var identifierName = parts[1]
                 .Trim();
 
-            return new MemberDefinition(
+            return new MemberDescriptor(
                 typeName,
                 identifierName);
         }

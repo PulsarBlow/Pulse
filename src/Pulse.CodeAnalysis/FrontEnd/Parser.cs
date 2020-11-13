@@ -7,15 +7,6 @@ namespace Pulse.CodeAnalysis.FrontEnd
     /// <summary>
     /// Recursive descent parser
     /// </summary>
-    // Parse for the following grammar:
-    // expression     → equality ;
-    // equality       → comparison ( ( "!=" | "==" ) comparison )*;
-    // comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )*;
-    // term           → factor ( ( "-" | "+" ) factor )*;
-    // factor         → unary ( ( "/" | "*" ) unary )*;
-    // unary          → ( "!" | "-" ) unary | primary;
-    // primary        → NUMBER | STRING | "true" | "false" | "nil"
-    //                | "(" expression ")";
     public class Parser
     {
         private readonly IErrorReporter _errorReporter;
@@ -36,15 +27,44 @@ namespace Pulse.CodeAnalysis.FrontEnd
         /// </summary>
         /// <returns>The parsed Expression (AST)</returns>
         /// <exception cref="ParseException">If the parsing fails</exception>
-        public Expression? Parse()
+        public IReadOnlyCollection<Statement> Parse()
         {
-            try { return Expression(); }
+            try
+            {
+                var statements = new List<Statement>();
+                while (!IsAtEnd()) { statements.Add(Statement()); }
+
+                return statements.AsReadOnly();
+            }
             catch (ParseException ex)
             {
                 // We don't want the parser to crash on error
                 _errorReporter.ReportSyntaxError(ex);
-                return null;
+                return new List<Statement>().AsReadOnly();
             }
+        }
+
+        private Statement Statement()
+            => Match(TokenType.Print)
+                ? PrintStatement()
+                : ExpressionStatement();
+
+        private Statement PrintStatement()
+        {
+            var value = Expression();
+            Consume(
+                TokenType.Semicolon,
+                "Expect ';' after value.");
+            return new PrintStatement(value);
+        }
+
+        private Statement ExpressionStatement()
+        {
+            var expression = Expression();
+            Consume(
+                TokenType.Semicolon,
+                "Expect ';' after expression.");
+            return new ExpressionStatement(expression);
         }
 
         private Expression Expression()

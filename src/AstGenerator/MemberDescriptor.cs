@@ -1,11 +1,11 @@
 namespace Pulse.AstGenerator
 {
-    internal class MemberDefinition
+    internal class MemberDescriptor
     {
         public string TypeName { get; }
         public string IdentifierName { get; }
 
-        public MemberDefinition(
+        public MemberDescriptor(
             string typeName,
             string identifierName)
         {

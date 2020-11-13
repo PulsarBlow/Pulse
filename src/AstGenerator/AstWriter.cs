@@ -27,9 +27,12 @@ namespace Pulse.AstGenerator
         }
 
         public async Task WriteAstAsync(
-            IEnumerable<TypeDefinition> typeDefinitions)
+            AstKind astKind,
+            IEnumerable<TypeDescriptor> typeDefinitions)
         {
-            var ast = _builder.BuildAst(typeDefinitions);
+            var ast = _builder.BuildAst(
+                astKind,
+                typeDefinitions);
             await using var writer = new StreamWriter(
                 _outputPath,
                 false,

@@ -12,10 +12,12 @@ namespace Pulse.AstGenerator
         private readonly StringBuilder _builder = new StringBuilder();
         private int _indentLevel;
         private readonly string _baseNamespace;
+        private readonly string _baseTypeName;
         private readonly int _indentSize;
 
         public AstBuilder(
             string baseNamespace,
+            string baseTypeName,
             int indentSize = DefaultIdentSize)
         {
             if (string.IsNullOrWhiteSpace(baseNamespace))
@@ -25,38 +27,56 @@ namespace Pulse.AstGenerator
 
             _baseNamespace = baseNamespace;
 
+            if (string.IsNullOrWhiteSpace(baseTypeName))
+            {
+                throw new ArgumentNullException(nameof(baseTypeName));
+            }
+
+            _baseTypeName = baseTypeName;
+
             _indentSize = indentSize > 0
                 ? indentSize
                 : DefaultIdentSize;
         }
 
         public string BuildAst(
-            IEnumerable<TypeDefinition> typeDefinitions)
+            AstKind astKind,
+            IEnumerable<TypeDescriptor> descriptors)
         {
             _builder.Clear();
-            WriteAst(typeDefinitions);
+            WriteAst(
+                astKind,
+                descriptors);
             return _builder.ToString();
         }
 
         private void WriteAst(
-            IEnumerable<TypeDefinition> typeDefinitions)
+            AstKind astKind,
+            IEnumerable<TypeDescriptor> descriptors)
         {
-            if (typeDefinitions == null)
+            if (descriptors == null)
             {
-                throw new ArgumentNullException(nameof(typeDefinitions));
+                throw new ArgumentNullException(nameof(descriptors));
             }
 
             // Avoid multiple enumeration
-            var definitions = typeDefinitions.ToList();
+            var definitions = descriptors.ToList();
             if (definitions.Count == 0) { return; }
 
             WriteFileHeader();
             WriteLine($"namespace {_baseNamespace}");
             OpenBlock();
 
-            WriteVisitor(definitions);
-            WriteBaseType();
-            foreach (var type in definitions) { WriteType(type); }
+            WriteVisitor(
+                astKind,
+                definitions);
+            WriteBaseType(astKind);
+            foreach (var type in definitions)
+            {
+                WriteType(
+                    astKind,
+                    type);
+            }
 
             CloseBlock();
         }
@@ -89,47 +109,61 @@ namespace Pulse.AstGenerator
         }
 
         private void WriteVisitor(
-            IEnumerable<TypeDefinition> types)
+            AstKind astKind,
+            IEnumerable<TypeDescriptor> types)
         {
-            WriteLine("public interface IVisitor<out T>");
+            WriteLine(
+                astKind == AstKind.Expressions
+                    ? $"public interface I{_baseTypeName}Visitor<out T>"
+                    : $"public interface I{_baseTypeName}Visitor");
             OpenBlock();
             foreach (var definition in types)
             {
                 WriteLine(
-                    $"T Visit{definition.TypeName}Expression({definition.TypeName}Expression expression);");
+                    astKind == AstKind.Expressions
+                        ? $"T Visit{definition.TypeName}({definition.TypeName} {FormatParameterName(_baseTypeName)});"
+                        : $"void Visit{definition.TypeName}({definition.TypeName} {FormatParameterName(_baseTypeName)});");
             }
 
             CloseBlock();
         }
 
-        private void WriteBaseType()
+        private void WriteBaseType(
+            AstKind astKind)
         {
-            WriteLine($"public abstract class Expression");
+            WriteLine($"public abstract class {_baseTypeName}");
             OpenBlock();
 
-            WriteLine("public abstract T Accept<T>(IVisitor<T> visitor);");
+            WriteLine(
+                astKind == AstKind.Expressions
+                    ? $"public abstract T Accept<T>(I{_baseTypeName}Visitor<T> visitor);"
+                    : $"public abstract void Accept(I{_baseTypeName}Visitor visitor);");
+
             CloseBlock();
         }
 
         private void WriteType(
-            TypeDefinition type)
+            AstKind astKind,
+            TypeDescriptor type)
         {
-            WriteLine(
-                $"public sealed class {type.TypeName}Expression : Expression");
+            WriteLine($"public sealed class {type.TypeName} : {_baseTypeName}");
             OpenBlock();
             WriteProperties(type);
             WriteLine();
             WriteConstructor(type);
             WriteLine();
-            WriteLine("public override T Accept<T>(IVisitor<T> visitor)");
+            WriteLine(
+                astKind == AstKind.Expressions
+                    ? $"public override T Accept<T>(I{_baseTypeName}Visitor<T> visitor)"
+                    : $"public override void Accept(I{_baseTypeName}Visitor visitor)");
             Indent();
-            WriteLine($"=> visitor.Visit{type.TypeName}Expression(this);");
+            WriteLine($"=> visitor.Visit{type.TypeName}(this);");
             Unindent();
             CloseBlock();
         }
 
         private void WriteProperties(
-            TypeDefinition type)
+            TypeDescriptor type)
         {
             foreach (var member in type.Members)
             {
@@ -139,13 +173,13 @@ namespace Pulse.AstGenerator
         }
 
         private void WriteConstructor(
-            TypeDefinition type)
+            TypeDescriptor type)
         {
             var parameters = string.Join(
                 ",",
                 type.Members.Select(
                     x => $"{x.TypeName} {FormatParameterName(x.IdentifierName)}"));
-            WriteLine($"public {type.TypeName}Expression({parameters})");
+            WriteLine($"public {type.TypeName}({parameters})");
 
             OpenBlock();
             foreach (var member in type.Members)

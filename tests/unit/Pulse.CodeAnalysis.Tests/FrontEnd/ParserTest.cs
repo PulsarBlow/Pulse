@@ -2,6 +2,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using CodeAnalysis.FrontEnd;
     using CodeAnalysis.FrontEnd.Errors;
     using Moq;
@@ -18,17 +19,24 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
             IEnumerable<Token> tokens,
             Action<Expression> inspector)
         {
+            // Arrange
             var parser = new Parser(
                 _errorReporterMock.Object,
                 tokens);
-            var expression = parser.Parse();
 
-            inspector(expression);
+            // Act
+            var statements = parser.Parse();
+
+            // Assert
+            Assert.Single(statements);
+            var stmt = Assert.IsType<ExpressionStatement>(statements.First());
+            inspector(stmt.Expression);
         }
 
         [Fact]
         internal void Parse_Reports_Error_When_Not_Expression()
         {
+            // Arrange
             // class + 1
             var tokens = new[]
             {
@@ -52,9 +60,12 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
             var parser = new Parser(
                 _errorReporterMock.Object,
                 tokens);
-            var expression = parser.Parse();
 
-            Assert.Null(expression);
+            // Act
+            var statements = parser.Parse();
+
+            // Assert
+            Assert.Empty(statements);
             _errorReporterMock.Verify(
                 x => x.ReportSyntaxError(It.IsAny<ParseException>()),
                 Times.Once);
@@ -74,7 +85,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 
         private static object[] NumberLiteralExpression()
         {
-            // 2
+            // 2;
             return new object[]
             {
                 new[]
@@ -84,7 +95,8 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
                         "2",
                         2D,
                         1),
-                    CreateEof(),
+                    Semicolon(),
+                    Eof(),
                 },
                 ExpressionAssertions.NumberInspector(2),
             };
@@ -92,7 +104,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 
         private static object[] StringLiteralExpression()
         {
-            // "pulse"
+            // "pulse";
             return new object[]
             {
                 new[]
@@ -102,7 +114,8 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
                         "pulse",
                         "pulse",
                         1),
-                    CreateEof(),
+                    Semicolon(),
+                    Eof(),
                 },
                 ExpressionAssertions.StringInspector("pulse"),
             };
@@ -110,7 +123,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 
         private static object[] BooleanLiteralExpression()
         {
-            // "false"
+            // false;
             return new object[]
             {
                 new[]
@@ -120,7 +133,8 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
                         "false",
                         false,
                         1),
-                    CreateEof(),
+                    Semicolon(),
+                    Eof(),
                 },
                 ExpressionAssertions.BooleanInspector(false),
             };
@@ -128,7 +142,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 
         private static object[] UnaryExpression()
         {
-            // !true
+            // !true;
             return new object[]
             {
                 new[]
@@ -143,7 +157,8 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
                         Lexemes.True,
                         null,
                         1),
-                    CreateEof(),
+                    Semicolon(),
+                    Eof(),
                 },
                 new Action<Expression>(
                     expression =>
@@ -162,7 +177,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 
         private static object[] GroupingExpression()
         {
-            // (1 * 1)
+            // (1 * 1);
             return new object[]
             {
                 new[]
@@ -192,7 +207,8 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
                         Lexemes.RightParen,
                         null,
                         1),
-                    CreateEof(),
+                    Semicolon(),
+                    Eof(),
                 },
                 new Action<Expression>(
                     expression =>
@@ -217,7 +233,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 
         private static object[] EqualityExpression()
         {
-            // 1 == 1
+            // 1 == 1;
             return new object[]
             {
                 new[]
@@ -237,7 +253,8 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
                         "1",
                         1D,
                         1),
-                    CreateEof(),
+                    Semicolon(),
+                    Eof(),
                 },
                 new Action<Expression>(
                     expression =>
@@ -259,7 +276,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 
         private static object[] ComparisonExpression()
         {
-            // 1 > 2
+            // 1 > 2;
             return new object[]
             {
                 new[]
@@ -279,7 +296,8 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
                         "2",
                         2D,
                         1),
-                    CreateEof(),
+                    Semicolon(),
+                    Eof(),
                 },
                 new Action<Expression>(
                     expression =>
@@ -301,7 +319,7 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
 
         private static object[] AdditionExpression()
         {
-            // 1 + 2
+            // 1 + 2;
             return new object[]
             {
                 new[]
@@ -321,7 +339,8 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
                         "2",
                         2D,
                         1),
-                    CreateEof(),
+                    Semicolon(),
+                    Eof(),
                 },
                 new Action<Expression>(
                     expression =>
@@ -341,7 +360,14 @@ namespace Pulse.CodeAnalysis.Tests.FrontEnd
             };
         }
 
-        private static Token CreateEof()
+        private static Token Semicolon()
+            => new Token(
+                TokenType.Semicolon,
+                Lexemes.Semicolon,
+                null,
+                1);
+
+        private static Token Eof()
             => new Token(
                 TokenType.Eof,
                 string.Empty,
